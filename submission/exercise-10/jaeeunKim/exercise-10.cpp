@@ -62,7 +62,6 @@ public:
 		return *this;
 	}
 	void push_back(const T& val) {
-		//if(capacity_ <= size_) {
 		if (capacity_ == size_) {
 			// increase capacity
 			capacity_ *= 2;
@@ -85,12 +84,16 @@ public:
 	}
 
 	T& operator[](size_t i) {
-		if (i >= 0 && i < size_) return data_[i];
+		if (i < size_) return data_[i];
+		else
+			throw out_of_range("Index out of bounds");
 	}
 
 	// for const object
 	const T& operator[](size_t i) const {
-		if (i >= 0 && i < size_) return data_[i];
+		if (i < size_) return data_[i];
+		else
+			throw out_of_range("Index out of bounds");
 	}
 
 	size_t size() const {
