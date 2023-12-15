@@ -62,7 +62,57 @@ public:
 		return *this;
 	}
 	void push_back(const T& val) {
-		//if(capacity_ <= size_) {
+		increase_if_needed();
+		data_[size_] = val;
+		++size_;
+	}
+	void pop_back() {
+		if (size_ > 0) size_--;
+	}
+
+	// &: Object is L-value
+	T& operator[](size_t i) &{
+		if (i< size_) return data_[i];
+		else
+			throw out_of_range("Index out of bounds");
+	}
+	
+	const T& operator[](size_t i)const &  {
+		if (i < size_) return data_[i];
+		else
+			throw out_of_range("Index out of bounds");
+	}
+
+	// && : Object is R-value
+	T&& operator[](size_t i) && {
+		if (i < size_) return move(data_[i]);
+		else
+			throw out_of_range("Index out of bounds");
+	}
+
+	const T&& operator[](size_t i) const &&  {
+		if (i < size_) return move(data_[i]);
+		else
+			throw out_of_range("Index out of bounds");
+	}
+
+	const size_t size() const{
+		return size_;
+	}
+
+	template <typename... Args>
+	void emplace_back(Args&&... args) {
+		increase_if_needed();
+		data_[size_] = T(forward<Args>(args)...);
+		++size_;
+	}
+
+	
+private:
+	T* data_;
+	size_t size_;
+	size_t capacity_;
+	void increase_if_needed() {
 		if (capacity_ == size_) {
 			// increase capacity
 			capacity_ *= 2;
@@ -76,63 +126,7 @@ public:
 			delete[] data_;
 			data_ = temp;
 		}
-		data_[size_] = val;
-		++size_;
 	}
-	void pop_back() {
-		if (size_ > 0) size_--;
-	}
-
-	T& operator[](size_t i) &{
-		if (i >= 0 && i < size_) return data_[i];
-	}
-	
-	const T& operator[](size_t i)const &  {
-		if (i >= 0 && i < size_) return data_[i];
-	}
-
-	T&& operator[](size_t i)&& {
-		if (i >= 0 && i < size_) return move(data_[i]);
-	}
-
-	const T&& operator[](size_t i)const &&  {
-		if (i >= 0 && i < size_) return move(data_[i]);
-	}
-
-	size_t size(){
-		return size_;
-	}
-
-	void emplace_back(T&& val) {
-		if (size_ == capacity_) {
-			capacity_ *= 2;
-			T* temp = new T[capacity_];
-			for (size_t i = 0; i < size_; ++i)
-				temp[i] = move(data_[i]);
-			delete[] data_;
-			data_ = temp;
-		}
-		data_[size_] = move(val);
-		++size_;
-	}
-
-	template <typename... Args>
-	void emplace_back(Args&&... args) {
-		if (size_ = capacity_) {
-			capacity_ *= 2;
-			T* temp = new T[capacity_];
-			for (size_t i = 0; i < size_; ++i)
-				temp[i] = move(data_[i]);
-			delete[] data_;
-			data_ = temp;
-		}
-		data_[size_] = T(forward<Args>(args)...);
-		++size_;
-	}
-private:
-	T* data_;
-	size_t size_;
-	size_t capacity_;
 };
 int main() {
 
