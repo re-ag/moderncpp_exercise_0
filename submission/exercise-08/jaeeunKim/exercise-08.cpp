@@ -20,6 +20,9 @@ public:
 	// copy constructor
 	MyApplication(const MyApplication& r) { cout << MY_FUNCTION << '\n'; }
 	// move constructor
+	/*
+		if there is no "noexcept"  -> emplace_back() uses copy constructor.
+	*/
 	MyApplication(MyApplication&& other) noexcept { cout << MY_FUNCTION << '\n'; }
 	// copy assignment operator
 	MyApplication& operator=(const MyApplication& other)  {
@@ -37,13 +40,21 @@ public:
 
 int main() {
 
-	MyApplication a;
+	/*MyApplication a;
 
-	MyApplication b = a;
+	MyApplication b = a;*/
 
 	//MyApplication c = std::move(a);
 
 	//MyApplication d;
 	//d = std::move(c);
+
+	vector<MyApplication> v;
+
+	for (int i = 0; i < 10; i++) {
+		v.emplace_back(); // move constructor
+	}
+
+
 	return 0;
 }
