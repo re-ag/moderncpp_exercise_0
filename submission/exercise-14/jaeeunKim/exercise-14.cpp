@@ -14,11 +14,12 @@ public:
     virtual void Hello() {
         cout << "This is Base\n";
     }
+    virtual ~MyBaseClass() = default;
 };
 
 class MyDerivedClass :public MyBaseClass {
 public:
-    void Hello() {
+    void Hello() override {
         cout << "This is Derived\n";
     }
 };
